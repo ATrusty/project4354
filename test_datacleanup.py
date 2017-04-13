@@ -1,6 +1,8 @@
 import datacleanup
 import regression
 
+rows = datacleanup.readData(11)
+years = datacleanup.generateYears(1900, 1990, 10)
 def test_isInvalidRow_EmptyRow_True():
 	result = datacleanup.isInvalidRow(["", "", ""])
 	assert result == True
@@ -31,21 +33,15 @@ def test_generateYears_1990_2000_3():
 	assert result[0] == 1990.0
 	assert result[-1] == 1999.0
 
-# Values taken from Excel and plugged into Wolfram Alpha.
-def test_getRegressionEquation_1900to1990_US_1985():
-	rows = datacleanup.getData()
-	# US is the first row
-	regEqn = regression.getRegressionEquation(datacleanup.generateYears(1900, 1990, 10), rows[0][1:])
-	assert abs(regEqn(1985) - 2.3065035797999954*10**8) < 10
+#Test modify row
+def test_modifyRow_Texas_1984_2015_1984():
+	result = datacleanup.modifyRow(rows[44])
+	assert abs(result[1] - 1.498329642154914728117*10**7) < 1
 
-def test_getRegressionEquation_1900to1990_Maine_1950():
-	rows = datacleanup.getData()
-	# Maine is the 20th row
-	regEqn = regression.getRegressionEquation(datacleanup.generateYears(1900, 1990, 10), rows[20][1:])
-	assert abs(regEqn(1950) - 935538) < 10
+def test_modifyRow_Texas_19884_2015_1999():
+	result = datacleanup.modifyRow(rows[44])
+	assert abs(result[16] - 1.978559282436642619633*10**7) < 1
 
-def test_getRegressionEquation_1900to1990_Texas_1968():
-	rows = datacleanup.getData()
-	# Texas is the 44th row
-	regEqn = regression.getRegressionEquation(datacleanup.generateYears(1900, 1990, 10), rows[44][1:])
-	assert abs(regEqn(1968) - 1.1742374879999995*10**7)
+def test_modifyRow_Texas_1984_2015_2015():
+	result = datacleanup.modifyRow(rows[44])
+	assert abs(result[-1] - 2.661584198796377390129*10**7) < 1
