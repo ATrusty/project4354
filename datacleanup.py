@@ -134,16 +134,36 @@ def getModifiedData():
 def cleanUpMortality():
 	file = open("Mortality Rates.csv", "r")
 	reader = csv.reader(file)
-	validData = []
-	validRows = [int(x) for x in range(1984, 2016)]
+	validRows = []
+	validYears = [int(x) for x in range(1984, 2016)]
+
+	# Trim out years not in 1984-2015
 	for line in reader:
 		if line[0] == "Year":
-			validData.append(line)
+			validRows.append(line)
 			continue
-		if int(line[0]) not in validRows:
+		if int(line[0]) not in validYears:
 			continue
 		else:
-			validData.append(line)
+			validRows.append(line)
+
+	# Trim out columns not going to be used
+	validData = []
+	for row in validRows:
+		trimmedRow = []
+		trimmedRow.append(row[0]) # Year
+		trimmedRow.append(row[1]) # Week
+		trimmedRow.append(row[3]) # Region
+		trimmedRow.append(row[4]) # State
+		trimmedRow.append(row[5]) # City
+		trimmedRow.append(row[7]) # All Deaths
+		trimmedRow.append(row[8]) # <1
+		trimmedRow.append(row[9]) # 1-24
+		trimmedRow.append(row[10]) # 25-44
+		trimmedRow.append(row[11]) # 45-64
+		trimmedRow.append(row[12]) # 65+
+		validData.append(trimmedRow)
+
 	file.close()
 	return validData
 

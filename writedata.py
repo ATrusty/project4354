@@ -13,7 +13,6 @@ def main():
 	# 	d = line.rstrip(' \t\r\n\0').split(",")
 	# 	print(d)
 	# print(len(statePopData[0]))
-	print(statePopData)
 	for row in statePopData:
 		for element in row[0:-1]:
 			statePopFile.write(str(element) + ",")
