@@ -8,7 +8,7 @@ years = datacleanup.generateYears(1900, 1990, 10)
 def test_getLinRegEqn_1900to1990_US_1985():
 	# US is the first row
 	regEqn = regression.getLinRegEqn(years, rows[0][1:])
-	assert abs(regEqn(1985) - 2.3065035797999954*10**8) < 10
+	assert abs(regEqn(1985) - 2.30650362796966400*10**8) < 1
 
 def test_getLinRegEqn_1900to1990_Maine_1950():
 	# Maine is the 20th row
@@ -18,7 +18,7 @@ def test_getLinRegEqn_1900to1990_Maine_1950():
 def test_getLinRegEqn_1900to1990_Texas_1968():
 	# Texas is the 44th row
 	regEqn = regression.getLinRegEqn(years, rows[44][1:])
-	assert abs(regEqn(1968) - 1.1742374879999995*10**7) < 10
+	assert abs(regEqn(1968) - 1.174237010424374400*10**7) < 1
 
 def test_getExpRegCoeffBase_WebExample():
 	xVals = [0, 2, 4, 7]
@@ -31,8 +31,6 @@ def test_getExpRegEqn_WebExample():
 	yVals = [3, 4, 11, 25]
 	eqn = regression.getExpRegEqn(xVals, yVals)
 	assert (eqn(20) - 1620.317) < 1
-	# def test_modifyRow_UnitedStates_2015():
-	# 	return
 
 def test_getExpRegCoeffBase_1900to1990_US_2015():
 	tup = regression.getExpRegCoeffBase(years, rows[0][1:])
