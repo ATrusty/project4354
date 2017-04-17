@@ -2,6 +2,9 @@ import csv
 import regression
 import math
 
+#----------------------------------------------------------------
+# Cleanup functions for state population file.
+
 # Constants for our project
 # Number of columns to take from the .csv file
 numberOfCols = 11
@@ -124,7 +127,27 @@ def getModifiedData():
 	return modifiedData
 
 
+
+#---------------------------------------------------------------
+# Cleanup functions for mortality rates file.
+
+def cleanUpMortality():
+	file = open("Mortality Rates.csv", "r")
+	reader = csv.reader(file)
+	validData = []
+	validRows = [int(x) for x in range(1984, 2016)]
+	for line in reader:
+		if line[0] == "Year":
+			validData.append(line)
+			continue
+		if int(line[0]) not in validRows:
+			continue
+		else:
+			validData.append(line)
+	file.close()
+	return validData
+
+
 if __name__ == '__main__':
-	m = getModifiedData()
-	printData(m)
+	cleanUpMortality()
  
