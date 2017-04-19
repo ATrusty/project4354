@@ -131,6 +131,9 @@ def getModifiedData():
 #---------------------------------------------------------------
 # Cleanup functions for mortality rates file.
 
+# cleanUpMortality: void -> list
+# Returns a list of the valid rows taken from the mortality rates
+# dataset.
 def cleanUpMortality():
 	file = open("Mortality Rates.csv", "r")
 	reader = csv.reader(file)
@@ -167,7 +170,16 @@ def cleanUpMortality():
 	file.close()
 	return validData
 
+#----------------------------------------------------------------
+# Cleanup for the 
+def cleanupIncome():
+	file = open("MedianIncome.csv", "r")
+	reader = csv.reader(file)
+
+	for line in reader:
+		print(line)
+
+
 
 if __name__ == '__main__':
-	cleanUpMortality()
- 
+	cleanupIncome() 
