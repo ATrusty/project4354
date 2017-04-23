@@ -147,6 +147,10 @@ def cleanUpMortality():
 			continue
 		if int(line[0]) not in validYears:
 			continue
+		if "" in line:
+			continue
+		if line[4] == "DC":
+			continue
 		else:
 			validRows.append(line)
 
@@ -175,11 +179,10 @@ def cleanUpMortality():
 def cleanupIncome():
 	file = open("MedianIncome.csv", "r")
 	reader = csv.reader(file)
-
 	for line in reader:
 		print(line)
 
 
 
 if __name__ == '__main__':
-	cleanupIncome() 
+	cleanUpMortality()
