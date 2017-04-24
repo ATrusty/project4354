@@ -3,6 +3,7 @@ import regression
 
 rows = datacleanup.readData(11)
 years = datacleanup.generateYears(1900, 1990, 10)
+cleanData = datacleanup.cleanUpMortality()
 def test_isInvalidRow_EmptyRow_True():
 	result = datacleanup.isInvalidRow(["", "", ""])
 	assert result == True
@@ -45,3 +46,12 @@ def test_modifyRow_Texas_19884_2015_1999():
 def test_modifyRow_Texas_1984_2015_2015():
 	result = datacleanup.modifyRow(rows[44])
 	assert abs(result[-1] - 2.661584198796377390129*10**7) < 1
+
+def test_cleanUpMortality_Boston_1984():
+	# Assert total deaths are correct
+	assert cleanData[0][4] == 9526
+	assert cleanData[0][5] == 432
+
+def test_cleanUpMortality_Tacoma_2015():
+	assert cleanData[len(cleanData)-1][4] == 7030
+	assert cleanData[len(cleanData)-1][6] == 114

@@ -171,8 +171,44 @@ def cleanUpMortality():
 		trimmedRow.append(row[12]) # 65+
 		validData.append(trimmedRow)
 
+	combinedData = combineWeekData(validData)
 	file.close()
-	return validData
+	return combinedData
+
+# combineWeekData: list of lists -> list of lists
+# Returns a list of lists by combining data for a city
+# for a given year. 
+def combineWeekData(data):
+	combinedData = []
+	i = 0
+	while(i < len(data)):
+		if i == 0:
+			combinedData.append(["Year", "Region", "State", "City", "All Deaths", 
+				"< 1", "1-24", "25-44", "45-64", "65+"])
+			i += 1
+			continue
+		currentCity = data[i][4]
+		year = data[i][0]
+		region = data[i][2]
+		state = data[i][3]
+		allDeaths = 0
+		deaths_1 = 0
+		deaths_1_to_24 = 0
+		deaths_25_to_44 = 0
+		deaths_45_to_64 = 0
+		deaths_65 = 0
+		while(i < len(data) and year == data[i][0]):
+			allDeaths += int(data[i][5])
+			deaths_1 += int(data[i][6])
+			deaths_1_to_24 += int(data[i][7])
+			deaths_25_to_44 += int(data[i][8])
+			deaths_45_to_64 += int(data[i][9])
+			deaths_65 += int(data[i][10])
+			i += 1
+		combinedRow = [year, region, state, currentCity, allDeaths, deaths_1, deaths_1_to_24,
+							deaths_25_to_44, deaths_45_to_64, deaths_65]
+		combinedData.append(combinedRow)
+	return combinedData
 
 #----------------------------------------------------------------
 # Cleanup for the 
@@ -185,4 +221,5 @@ def cleanupIncome():
 
 
 if __name__ == '__main__':
-	cleanUpMortality()
+	data = cleanUpMortality()
+	print(data)

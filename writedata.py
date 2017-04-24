@@ -21,8 +21,8 @@ def main():
 
 	for row in mortalityData:
 		for element in row[0:-1]:
-			mortalityFile.write(element + ",")
-		mortalityFile.write(row[-1])
+			mortalityFile.write(str(element) + ",")
+		mortalityFile.write(str(row[-1]))
 		mortalityFile.write("\n")
 
 	statePopFile.close()
