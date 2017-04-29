@@ -55,54 +55,6 @@ statesDict = {  "AL": "Alabama",
                 "WY": "Wyoming",
                 }
 
-server = 'testdb4354.database.windows.net'
-database = 'testdb'
-username = 'admin1'
-password = 'College22'
-driver= '{ODBC Driver 13 for SQL Server}'
-cnxn = pyodbc.connect(driver=driver, server=server, database=database, user=username, password=password)
-cursor = cnxn.cursor()
-
-def writeProportionLessThanOne(cursor):
-    cursor.execute("SELECT m.state_name, SUM(deaths) "
-        "FROM Mortality m, StatesTable s "
-        "WHERE m.state_name = s.state_name AND age_ID = 1 "
-        "GROUP BY m.state_name ORDER BY m.state_name")
-
-    deathsLessThan1 = cursor.fetchall()
-
-    cursor.execute("SELECT m.state_name, SUM(deaths) "
-        "FROM Mortality m GROUP BY m.state_name ORDER BY m.state_name")
-
-    totalDeaths = cursor.fetchall()
-    for row in deathsLessThan1:
-        print(row)
-
-    print("\n")
-    for i in range(0, len(totalDeaths)):
-        print(str(totalDeaths[i]) + str(deathsLessThan1[i]))
-
-    proportionDeathsLessThan1 = []
-    for i in range(0, len(totalDeaths)):
-        state = totalDeaths[i][0]
-        proportion = float(deathsLessThan1[i][1]) / float(totalDeaths[i][1])
-        proportionDeathsLessThan1.append([state, proportion])
-
-    for row in proportionDeathsLessThan1:
-        print(row)
-
-    file = open("mapProportionLessThan1.csv", "w", newline='')
-    writer = csv.writer(file)
-    header = ["code", "state", "proportion"]
-    writer.writerow(header)
-    for row in proportionDeathsLessThan1:
-        state = row[0]
-        for k, v in statesDict.items():
-            if(v == state):
-                row.insert(0, k)
-        writer.writerow(row)
-    file.close()
-
 def graphProportionLessThanOne():
     df = pd.read_csv("mapProportionLessThan1.csv")
     for col in df.columns:
@@ -141,5 +93,3 @@ def graphProportionLessThanOne():
         
     fig = dict( data=data, layout=layout )
     plot.offline.plot( fig, filename='d3-cloropleth-map' )
-
-# datafile = pd.read_csv('https:
