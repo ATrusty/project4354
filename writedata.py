@@ -75,6 +75,9 @@ def main():
 	writeIncomeForStates(cursor)
 	writeProportionMiddleAge(cursor)
 	writeProportionOver65(cursor)
+	writeMortalityForCityIn1984(cursor)
+	writeMortalityForCityIn2000(cursor)
+	writeMortalityForCityIn2012(cursor)
 	# for row in statePopData:
 	# 	for element in row[0:-1]:
 	# 		statePopFile.write(str(element) + ",")
@@ -229,6 +232,74 @@ def writeIncomeForStates(cursor):
 		writer.writerow(incomeRow)
 	file.close()
 
+def writeMortalityForCityIn1984(cursor):
+    file = open("top20citiesMortality1984.csv", "w", newline='')
+    
+    cursor.execute("select city, state_name, death from CityMortality "
+                   "where death IN (select MAX(death) from CityMortality "
+                   "where year = 1984 group by state_name) order by death DESC")
 
+    cityMortality = cursor.fetchall()
+
+    top20 = []
+    for i in range(0, 20):
+        top20.append(cityMortality[i])
+
+    writer = csv.writer(file)
+    header = ["city", "state", "death"]
+    writer.writerow(header)
+    
+    for row in top20:
+        state = row[1]
+        
+        writer.writerow(row)
+    file.close()
+
+def writeMortalityForCityIn2000(cursor):
+    file = open("top20citiesMortality2000.csv", "w", newline='')
+    
+    cursor.execute("select city, state_name, death from CityMortality "
+                   "where death IN (select MAX(death) from CityMortality "
+                   "where year = 2000 group by state_name) order by death DESC")
+
+    cityMortality = cursor.fetchall()
+
+    top20 = []
+    for i in range(0, 20):
+        top20.append(cityMortality[i])
+
+    writer = csv.writer(file)
+    header = ["city", "state", "death"]
+    writer.writerow(header)
+    
+    for row in top20:
+        state = row[1]
+        
+        writer.writerow(row)
+    file.close()
+
+def writeMortalityForCityIn2012(cursor):
+    file = open("top20citiesMortality2012.csv", "w", newline='')
+    
+    cursor.execute("select city, state_name, death from CityMortality "
+                   "where death IN (select MAX(death) from CityMortality "
+                   "where year = 2012 group by state_name) order by death DESC")
+
+    cityMortality = cursor.fetchall()
+
+    top20 = []
+    for i in range(0, 20):
+        top20.append(cityMortality[i])
+
+    writer = csv.writer(file)
+    header = ["city", "state", "death"]
+    writer.writerow(header)
+    
+    for row in top20:
+        state = row[1]
+        
+        writer.writerow(row)
+    file.close()
+    
 
 main()

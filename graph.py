@@ -214,22 +214,45 @@ def graphProportionOver65():
     fig = dict( data=data, layout=layout )
     plot.offline.plot( fig, filename='over65Graph.html' )
 
-def graphTop10Mortality():
-    df = pd.read_csv('top10citiesMortality.csv')
+def graphTop10Mortality1984():
+    df = pd.read_csv('top20citiesMortality1984.csv')
     
     data = [go.Bar(
             x=df['city'],
             y=df['death']
     )]
 
-    plot.offline.plot(data, filename='Top 10 city with highest deaths in 1984.html')
+    plot.offline.plot(data, filename='Top 20 cities with highest deaths in 1984.html')
+
+def graphTop10Mortality2000():
+    df = pd.read_csv('top20citiesMortality2000.csv')
+    
+    data = [go.Bar(
+            x=df['city'],
+            y=df['death']
+    )]
+
+    plot.offline.plot(data, filename='Top 20 cities with highest deaths in 2000.html')
+
+def graphTop10Mortality2012():
+    df = pd.read_csv('top20citiesMortality2012.csv')
+    
+    data = [go.Bar(
+            x=df['city'],
+            y=df['death']
+    )]
+
+    plot.offline.plot(data, filename='Top 20 cities with highest deaths in 2012.html')
+
 
 def main():
     graphProportionLessThanOne()
     graphProportionMiddleAge()
     graphProportionOver65()
     graphAverageMedianIncome()
-    graphTop10Mortality()
+    graphTop10Mortality1984()
+    graphTop10Mortality2000()
+    graphTop10Mortality2012()
 
 
 
