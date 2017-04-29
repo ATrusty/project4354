@@ -85,7 +85,7 @@ def graphAverageMedianIncome():
             ) ]
 
     layout = dict(
-            title = 'Average Median Income by State' + "<br>" + "1984-2012",
+            title = '<b>Average Median Income by State</b>' + "<br>" + "<b>1984-2012</b>",
             geo = dict(
                 scope='usa',
                 projection=dict( type='albers usa' ),
@@ -124,7 +124,7 @@ def graphProportionLessThanOne():
             ) ]
 
     layout = dict(
-            title = 'Proportion of deaths age < 1 to state population' + "<br>" + "1984-2012",
+            title = '<b>Proportion of deaths age < 1 to state population</b>' + "<br>" + "<b>1984-2012</b>",
             geo = dict(
                 scope='usa',
                 projection=dict( type='albers usa' ),
@@ -163,7 +163,7 @@ def graphProportionMiddleAge():
             ) ]
 
     layout = dict(
-            title = 'Proportion of deaths age 25-44 to state population' + "<br>" + "1984-2012",
+            title = '<b>Proportion of deaths age 25-44 to state population</b>' + "<br>" + "<b>1984-2012</b>",
             geo = dict(
                 scope='usa',
                 projection=dict( type='albers usa' ),
@@ -203,7 +203,7 @@ def graphProportionOver65():
             ) ]
 
     layout = dict(
-            title = 'Proportion of deaths age 65+ to state population' + "<br>" + "1984-2012",
+            title = '<b>Proportion of deaths age 65+ to state population</b>' + "<br>" + "<b>1984-2012</b>",
             geo = dict(
                 scope='usa',
                 projection=dict( type='albers usa' ),
@@ -222,7 +222,20 @@ def graphTop10Mortality1984():
             y=df['death']
     )]
 
-    plot.offline.plot(data, filename='Top 20 cities with highest deaths in 1984.html')
+    layout = go.Layout(
+        title="<b>Top 10 City Mortality Rates in 1984</b>",
+        xaxis=dict(
+            title="<b>City</b>"
+        ),
+
+        yaxis=dict(
+            title="<b>Mortalities</b>"
+        )
+    )
+
+    figure=go.Figure(data=data,layout=layout)
+
+    plot.offline.plot(figure, filename='Top 20 cities with highest deaths in 1984.html')
 
 def graphTop10Mortality2000():
     df = pd.read_csv('top20citiesMortality2000.csv')
@@ -232,7 +245,20 @@ def graphTop10Mortality2000():
             y=df['death']
     )]
 
-    plot.offline.plot(data, filename='Top 20 cities with highest deaths in 2000.html')
+    layout = go.Layout(
+        title="<b>Top 10 City Mortality Rates in 2000</b>",
+        xaxis=dict(
+            title="<b>City</b>"
+        ),
+
+        yaxis=dict(
+            title="<b>Mortalities</b>"
+        )
+    )
+
+    figure=go.Figure(data=data,layout=layout)
+
+    plot.offline.plot(figure, filename='Top 20 cities with highest deaths in 2000.html')
 
 def graphTop10Mortality2012():
     df = pd.read_csv('top20citiesMortality2012.csv')
@@ -242,7 +268,20 @@ def graphTop10Mortality2012():
             y=df['death']
     )]
 
-    plot.offline.plot(data, filename='Top 20 cities with highest deaths in 2012.html')
+    layout = go.Layout(
+        title="<b>Top 10 City Mortality Rates in 2012</b>",
+        xaxis=dict(
+            title="<b>City</b>"
+        ),
+
+        yaxis=dict(
+            title="<b>Mortalities</b>"
+        )
+    )
+
+    figure=go.Figure(data=data,layout=layout)
+
+    plot.offline.plot(figure, filename='Top 20 cities with highest deaths in 2012.html')
 
 
 def main():
