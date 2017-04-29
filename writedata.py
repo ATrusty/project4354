@@ -4,7 +4,7 @@
 import datacleanup
 import pyodbc
 import csv
-
+import math
 statesDict = {  "AL": "Alabama", 
                 "AK": "Alaska", 
                 "AZ": "Arizona", 
@@ -66,31 +66,28 @@ def main():
 	cursor = cnxn.cursor()
 
 
-	statePopFile = open("populations.csv", "w")
-	mortalityFile = open("mortalitytrimmed.csv", "w")
-	statePopData = datacleanup.getModifiedData()
-	mortalityData = datacleanup.cleanUpMortality()
+	# statePopFile = open("populations.csv", "w")
+	# mortalityFile = open("mortalitytrimmed.csv", "w")
+	# statePopData = datacleanup.getModifiedData()
+	# mortalityData = datacleanup.cleanUpMortality()
 
 	writeProportionLessThanOne(cursor)
-	# for line in statePopFile:
-	# 	d = line.rstrip(' \t\r\n\0').split(",")
-	# 	print(d)
-	# print(len(statePopData[0]))
-	for row in statePopData:
-		for element in row[0:-1]:
-			statePopFile.write(str(element) + ",")
-		statePopFile.write(str(row[-1]))
-		statePopFile.write("\n")
+	writeIncomeForStates(cursor)
+	# for row in statePopData:
+	# 	for element in row[0:-1]:
+	# 		statePopFile.write(str(element) + ",")
+	# 	statePopFile.write(str(row[-1]))
+	# 	statePopFile.write("\n")
 
-	for row in mortalityData:
-		for element in row[0:-1]:
-			mortalityFile.write(str(element) + ",")
-		mortalityFile.write(str(row[-1]))
-		mortalityFile.write("\n")
+	# for row in mortalityData:
+	# 	for element in row[0:-1]:
+	# 		mortalityFile.write(str(element) + ",")
+	# 	mortalityFile.write(str(row[-1]))
+	# 	mortalityFile.write("\n")
 
 	# Close files
-	statePopFile.close()
-	mortalityFile.close()
+	# statePopFile.close()
+	# mortalityFile.close()
 	
 	# Close database connections
 	cursor.close()
@@ -128,6 +125,40 @@ def writeProportionLessThanOne(cursor):
 			if(v == state):
 				row.insert(0, k)
 		writer.writerow(row)
+	file.close()
+
+def writeIncomeForStates(cursor):
+	file = open("incomeFrom1984to2012.csv", "w", newline = '')
+	# Number of years we have data for
+	numYears = 29.0
+
+	# Select the sum of the median_income for each state
+	cursor.execute("SELECT state_name, SUM(median_income) FROM PopulationIncome "
+		"GROUP BY state_name ORDER BY state_name")
+	# Store result from database into 'rows'
+	rows = cursor.fetchall()
+	
+	writer = csv.writer(file)
+
+	# Create and write the header 
+	header = ["code", "state", "avg_income"]
+	writer.writerow(header)
+
+	for i in range(0, len(rows)):
+		incomeRow = []
+		state = rows[i][0]
+		# Skip United States data
+		if state == 'United States':
+				continue
+
+		# Look for state abbreviation in dictionary
+		for k, v in statesDict.items():
+			# If the state abbreviation is found crete the row to write to csv
+			if v == state:
+				incomeRow = [k, state, math.ceil(rows[i][1] / numYears)]
+
+		# Write the row to the csv file
+		writer.writerow(incomeRow)
 	file.close()
 
 main()

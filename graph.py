@@ -55,12 +55,51 @@ statesDict = {  "AL": "Alabama",
                 "WY": "Wyoming",
                 }
 
+def graphAverageMedianIncome():
+    df = pd.read_csv("incomeFrom1984to2012.csv")
+    for col in df.columns:
+        df[col] = df[col].astype(str)
+
+    scl = [[0.0, 'rgb(235,239,255)'],[0.2, 'rgb(184,200,255)'],[0.4, 'rgb(133,161,255)'],\
+                [0.6, 'rgb(82,122,255)'],[0.8, 'rgb(0,49,209)'],[1.0, 'rgb(0,37,158)']]
+
+    df['text'] = df['state']
+
+    data = [ dict(
+            type='choropleth',
+            colorscale = scl,
+            autocolorscale = False,
+            locations = df['code'],
+            z = df['avg_income'].astype(float),
+            locationmode = 'USA-states',
+            text = df['text'],
+            marker = dict(
+                line = dict (
+                    color = 'rgb(255,255,255)',
+                    width = 2
+                ) ),
+            colorbar = dict(
+                title = "Avg. Med Income")
+            ) ]
+
+    layout = dict(
+            title = 'Average Median Income by State' + "<br>" + "1984-2012",
+            geo = dict(
+                scope='usa',
+                projection=dict( type='albers usa' ),
+                showlakes = True,
+                lakecolor = 'rgb(255, 255, 255)'),
+                 )
+        
+    fig = dict( data=data, layout=layout )
+    plot.offline.plot( fig, filename='avgMedianIncomes.html' )
+
 def graphProportionLessThanOne():
     df = pd.read_csv("mapProportionLessThan1.csv")
     for col in df.columns:
         df[col] = df[col].astype(str)
 
-    scl = [[0.0, 'rgb(242,240,247)'],[0.2, 'rgb(218,218,235)'],[0.4, 'rgb(188,189,220)'],\
+        scl = [[0.0, 'rgb(242,240,247)'],[0.2, 'rgb(218,218,235)'],[0.4, 'rgb(188,189,220)'],\
                 [0.6, 'rgb(158,154,200)'],[0.8, 'rgb(117,107,177)'],[1.0, 'rgb(84,39,143)']]
 
     df['text'] = df['state']
@@ -92,4 +131,10 @@ def graphProportionLessThanOne():
                  )
         
     fig = dict( data=data, layout=layout )
-    plot.offline.plot( fig, filename='d3-cloropleth-map' )
+    plot.offline.plot( fig, filename='lessThanOneGraph.html' )
+
+def main():
+    graphProportionLessThanOne()
+    graphAverageMedianIncome()
+
+main()
