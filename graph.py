@@ -2,6 +2,8 @@ import plotly as plot
 import pandas as pd
 import csv
 import pyodbc
+import plotly.graph_objs as go
+
 
 statesDict = {  "AL": "Alabama", 
                 "AK": "Alaska", 
@@ -212,11 +214,22 @@ def graphProportionOver65():
     fig = dict( data=data, layout=layout )
     plot.offline.plot( fig, filename='over65Graph.html' )
 
+def graphTop10Mortality():
+    df = pd.read_csv('top10citiesMortality.csv')
+    
+    data = [go.Bar(
+            x=df['city'],
+            y=df['death']
+    )]
+
+    plot.offline.plot(data, filename='Top 10 city with highest deaths in 1984.html')
+
 def main():
     graphProportionLessThanOne()
     graphProportionMiddleAge()
     graphProportionOver65()
     graphAverageMedianIncome()
+    graphTop10Mortality()
 
 
 
