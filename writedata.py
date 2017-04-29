@@ -73,6 +73,8 @@ def main():
 
 	writeProportionLessThanOne(cursor)
 	writeIncomeForStates(cursor)
+	writeProportionMiddleAge(cursor)
+	writeProportionOver65(cursor)
 	# for row in statePopData:
 	# 	for element in row[0:-1]:
 	# 		statePopFile.write(str(element) + ",")
@@ -127,6 +129,72 @@ def writeProportionLessThanOne(cursor):
 		writer.writerow(row)
 	file.close()
 
+
+def writeProportionMiddleAge(cursor):
+	file = open("proportionMiddleAge.csv", "w", newline = '')
+
+	cursor.execute("SELECT m.state_name, SUM(deaths) "
+		"FROM Mortality m, StatesTable s "
+		"WHERE m.state_name = s.state_name AND age_ID = 3 "
+		"GROUP BY m.state_name ORDER BY m.state_name")
+
+	deathsMiddleAge = cursor.fetchall()
+
+	cursor.execute("SELECT m.state_name, SUM(deaths) "
+		"FROM Mortality m GROUP BY m.state_name ORDER BY m.state_name")
+
+	totalDeaths = cursor.fetchall()
+
+	proportionDeathsMiddleAge = []
+	for i in range(0, len(totalDeaths)):
+		state = totalDeaths[i][0]
+		proportion = float(deathsMiddleAge[i][1]) / float(totalDeaths[i][1])
+		proportionDeathsMiddleAge.append([state, proportion])
+
+	writer = csv.writer(file)
+	header = ["code", "state", "proportion"]
+	writer.writerow(header)
+	for row in proportionDeathsMiddleAge:
+		state = row[0]
+		for k, v in statesDict.items():
+			if(v == state):
+				row.insert(0, k)
+		writer.writerow(row)
+	file.close()	
+
+
+def writeProportionOver65(cursor):
+	file = open("proportionOver65.csv", "w", newline = '')
+
+	cursor.execute("SELECT m.state_name, SUM(deaths) "
+		"FROM Mortality m, StatesTable s "
+		"WHERE m.state_name = s.state_name AND age_ID = 5 "
+		"GROUP BY m.state_name ORDER BY m.state_name")
+
+	deathsOver65 = cursor.fetchall()
+
+	cursor.execute("SELECT m.state_name, SUM(deaths) "
+		"FROM Mortality m GROUP BY m.state_name ORDER BY m.state_name")
+
+	totalDeaths = cursor.fetchall()
+
+	proportionDeathsOver65 = []
+	for i in range(0, len(totalDeaths)):
+		state = totalDeaths[i][0]
+		proportion = float(deathsOver65[i][1]) / float(totalDeaths[i][1])
+		proportionDeathsOver65.append([state, proportion])
+
+	writer = csv.writer(file)
+	header = ["code", "state", "proportion"]
+	writer.writerow(header)
+	for row in proportionDeathsOver65:
+		state = row[0]
+		for k, v in statesDict.items():
+			if(v == state):
+				row.insert(0, k)
+		writer.writerow(row)
+	file.close()	
+
 def writeIncomeForStates(cursor):
 	file = open("incomeFrom1984to2012.csv", "w", newline = '')
 	# Number of years we have data for
@@ -160,5 +228,7 @@ def writeIncomeForStates(cursor):
 		# Write the row to the csv file
 		writer.writerow(incomeRow)
 	file.close()
+
+
 
 main()

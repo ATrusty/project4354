@@ -106,8 +106,8 @@ def graphProportionLessThanOne():
 
     data = [ dict(
             type='choropleth',
-            colorscale = scl,
-            autocolorscale = False,
+            colorscale = 'Reds',
+            autocolorscale = True,
             locations = df['code'],
             z = df['proportion'].astype(float),
             locationmode = 'USA-states',
@@ -133,8 +133,91 @@ def graphProportionLessThanOne():
     fig = dict( data=data, layout=layout )
     plot.offline.plot( fig, filename='lessThanOneGraph.html' )
 
+def graphProportionMiddleAge():
+    df = pd.read_csv("proportionMiddleAge.csv")
+    for col in df.columns:
+        df[col] = df[col].astype(str)
+
+        scl = [[0.0, 'rgb(242,240,247)'],[0.2, 'rgb(218,218,235)'],[0.4, 'rgb(188,189,220)'],\
+                [0.6, 'rgb(158,154,200)'],[0.8, 'rgb(117,107,177)'],[1.0, 'rgb(84,39,143)']]
+
+    df['text'] = df['state']
+
+    data = [ dict(
+            type='choropleth',
+            colorscale = 'Reds',
+            autocolorscale = True,
+            locations = df['code'],
+            z = df['proportion'].astype(float),
+            locationmode = 'USA-states',
+            text = df['text'],
+            marker = dict(
+                line = dict (
+                    color = 'rgb(255,255,255)',
+                    width = 2
+                ) ),
+            colorbar = dict(
+                title = "Proportion")
+            ) ]
+
+    layout = dict(
+            title = 'Proportion of deaths age 25-44 to state population' + "<br>" + "1984-2012",
+            geo = dict(
+                scope='usa',
+                projection=dict( type='albers usa' ),
+                showlakes = True,
+                lakecolor = 'rgb(255, 255, 255)'),
+                 )
+        
+    fig = dict( data=data, layout=layout )
+    plot.offline.plot( fig, filename='middleAgeGraph.html' )
+
+
+def graphProportionOver65():
+    df = pd.read_csv("proportionOver65.csv")
+    for col in df.columns:
+        df[col] = df[col].astype(str)
+
+        scl = [[0.0, 'rgb(242,240,247)'],[0.2, 'rgb(218,218,235)'],[0.4, 'rgb(188,189,220)'],\
+                [0.6, 'rgb(158,154,200)'],[0.8, 'rgb(117,107,177)'],[1.0, 'rgb(84,39,143)']]
+
+    df['text'] = df['state']
+
+    data = [ dict(
+            type='choropleth',
+            colorscale = 'Reds',
+            autocolorscale = True,
+            locations = df['code'],
+            z = df['proportion'].astype(float),
+            locationmode = 'USA-states',
+            text = df['text'],
+            marker = dict(
+                line = dict (
+                    color = 'rgb(255,255,255)',
+                    width = 2
+                ) ),
+            colorbar = dict(
+                title = "Proportion")
+            ) ]
+
+    layout = dict(
+            title = 'Proportion of deaths age 65+ to state population' + "<br>" + "1984-2012",
+            geo = dict(
+                scope='usa',
+                projection=dict( type='albers usa' ),
+                showlakes = True,
+                lakecolor = 'rgb(255, 255, 255)'),
+                 )
+        
+    fig = dict( data=data, layout=layout )
+    plot.offline.plot( fig, filename='over65Graph.html' )
+
 def main():
     graphProportionLessThanOne()
+    graphProportionMiddleAge()
+    graphProportionOver65()
     graphAverageMedianIncome()
+
+
 
 main()
