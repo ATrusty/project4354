@@ -60,11 +60,9 @@ def getBestRegression(xVals, yVals):
 
 	# If exponential r^2 > linear r^2 set equation to exponential regression
 	if(expCoeffDeter > linCoeffDeter):
-		print( " exp regression")
 		regEqn = getExpRegEqn(xVals, yVals)
 	# Otherwise set equation to linear regression
 	else:
-		print( " lin regression")
 		regEqn = getLinRegEqn(xVals, yVals)
 	return regEqn
 
