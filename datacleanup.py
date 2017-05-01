@@ -89,20 +89,7 @@ def modifyRow(row):
 	modifiedRow = [0 for x in range(desiredEndYear - desiredStartYear + 1)]
 	years = generateYears(startYear, endYear, increment)
 
-	# Calculate r^2 for both exponential regression and linear regression
-	linCoeffDeter = regression.getCoeffOfDeter(years, rowWithoutState)
-	logYVals = [math.log10(y) for y in rowWithoutState]
-	expCoeffDeter = regression.getCoeffOfDeter(years, logYVals)
-	regEqn = lambda x: x
-
-	# If exponential r^2 > linear r^2 set equation to exponential regression
-	if(expCoeffDeter > linCoeffDeter):
-		print(row[0] + " exp regression")
-		regEqn = regression.getExpRegEqn(years, rowWithoutState)
-	# Otherwise set equation to linear regression
-	else:
-		print(row[0] + " lin regression")
-		regEqn = regression.getLinRegEqn(years, rowWithoutState)
+	regEqn = regression.getBestRegression(years, rowWithoutState)
 
 	# Use regression to fill in the years in between
 	# for example 1901, 1945, 1987.
@@ -221,5 +208,5 @@ def cleanupIncome():
 
 
 if __name__ == '__main__':
-	data = cleanUpMortality()
-	print(data)
+	data = getModifiedData()
+	

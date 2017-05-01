@@ -78,6 +78,7 @@ def main():
 	writeMortalityForCityIn1984(cursor)
 	writeMortalityForCityIn2000(cursor)
 	writeMortalityForCityIn2012(cursor)
+	writePredictData(cursor)
 	# for row in statePopData:
 	# 	for element in row[0:-1]:
 	# 		statePopFile.write(str(element) + ",")
@@ -300,6 +301,31 @@ def writeMortalityForCityIn2012(cursor):
         
         writer.writerow(row)
     file.close()
-    
 
+def writePredictData(cursor):
+	file = open("predictInfo.csv", "w", newline='')
+	writer = csv.writer(file)
+
+	cursor.execute("SELECT m.state_name, m.year, ip.median_income, ip.population, s.region, SUM(m.deaths) "
+		" FROM Mortality m, PopulationIncome ip, StatesTable S "
+		" WHERE m.year = ip.year AND m.state_name = ip.state_name and m.state_name = S.state_name "
+		" GROUP BY m.state_name, m.year, S.region, ip.median_income, ip.population "
+		" ORDER BY m.state_name, m.year")
+
+	dbRows = cursor.fetchall()
+
+	writeRows = []
+	for i in range(0, len(dbRows)):
+		state = dbRows[i][0]
+		year = int(dbRows[i][1])
+		income = int(dbRows[i][2])
+		pop = int(dbRows[i][3])
+		region = int(dbRows[i][4])
+		totalDeaths = int(dbRows[i][5])
+		writeRows.append([state, year, income, pop, region, totalDeaths])   
+
+	for row in writeRows:
+		writer.writerow(row)
+
+	file.close()
 main()
