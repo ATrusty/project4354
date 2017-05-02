@@ -89,20 +89,7 @@ def modifyRow(row):
 	modifiedRow = [0 for x in range(desiredEndYear - desiredStartYear + 1)]
 	years = generateYears(startYear, endYear, increment)
 
-	# Calculate r^2 for both exponential regression and linear regression
-	linCoeffDeter = regression.getCoeffOfDeter(years, rowWithoutState)
-	logYVals = [math.log10(y) for y in rowWithoutState]
-	expCoeffDeter = regression.getCoeffOfDeter(years, logYVals)
-	regEqn = lambda x: x
-
-	# If exponential r^2 > linear r^2 set equation to exponential regression
-	if(expCoeffDeter > linCoeffDeter):
-		print(row[0] + " exp regression")
-		regEqn = regression.getExpRegEqn(years, rowWithoutState)
-	# Otherwise set equation to linear regression
-	else:
-		print(row[0] + " lin regression")
-		regEqn = regression.getLinRegEqn(years, rowWithoutState)
+	regEqn = regression.getBestRegression(years, rowWithoutState)
 
 	# Use regression to fill in the years in between
 	# for example 1901, 1945, 1987.
@@ -131,6 +118,9 @@ def getModifiedData():
 #---------------------------------------------------------------
 # Cleanup functions for mortality rates file.
 
+# cleanUpMortality: void -> list
+# Returns a list of the valid rows taken from the mortality rates
+# dataset.
 def cleanUpMortality():
 	file = open("Mortality Rates.csv", "r")
 	reader = csv.reader(file)
@@ -143,6 +133,10 @@ def cleanUpMortality():
 			validRows.append(line)
 			continue
 		if int(line[0]) not in validYears:
+			continue
+		if "" in line:
+			continue
+		if line[4] == "DC":
 			continue
 		else:
 			validRows.append(line)
@@ -164,10 +158,55 @@ def cleanUpMortality():
 		trimmedRow.append(row[12]) # 65+
 		validData.append(trimmedRow)
 
+	combinedData = combineWeekData(validData)
 	file.close()
-	return validData
+	return combinedData
+
+# combineWeekData: list of lists -> list of lists
+# Returns a list of lists by combining data for a city
+# for a given year. 
+def combineWeekData(data):
+	combinedData = []
+	i = 0
+	while(i < len(data)):
+		if i == 0:
+			combinedData.append(["Year", "Region", "State", "City", "All Deaths", 
+				"< 1", "1-24", "25-44", "45-64", "65+"])
+			i += 1
+			continue
+		currentCity = data[i][4]
+		year = data[i][0]
+		region = data[i][2]
+		state = data[i][3]
+		allDeaths = 0
+		deaths_1 = 0
+		deaths_1_to_24 = 0
+		deaths_25_to_44 = 0
+		deaths_45_to_64 = 0
+		deaths_65 = 0
+		while(i < len(data) and year == data[i][0]):
+			allDeaths += int(data[i][5])
+			deaths_1 += int(data[i][6])
+			deaths_1_to_24 += int(data[i][7])
+			deaths_25_to_44 += int(data[i][8])
+			deaths_45_to_64 += int(data[i][9])
+			deaths_65 += int(data[i][10])
+			i += 1
+		combinedRow = [year, region, state, currentCity, allDeaths, deaths_1, deaths_1_to_24,
+							deaths_25_to_44, deaths_45_to_64, deaths_65]
+		combinedData.append(combinedRow)
+	return combinedData
+
+#----------------------------------------------------------------
+# Cleanup for the 
+def cleanupIncome():
+	file = open("MedianIncome.csv", "r")
+	reader = csv.reader(file)
+	for line in reader:
+		print(line)
+
 
 
 if __name__ == '__main__':
-	cleanUpMortality()
- 
+	data = getModifiedData()
+	

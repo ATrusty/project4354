@@ -51,4 +51,19 @@ def getCoeffOfDeter(xVals, yVals):
 	denominator = denomLeftTerm * denomRightTerm
 	return math.pow(numerator / math.sqrt(denominator), 2)
 
+def getBestRegression(xVals, yVals):
+	# Calculate r^2 for both exponential regression and linear regression
+	linCoeffDeter = getCoeffOfDeter(xVals, yVals)
+	logYVals = [math.log10(y) for y in yVals]
+	expCoeffDeter = getCoeffOfDeter(xVals, logYVals)
+	regEqn = lambda x: x
+
+	# If exponential r^2 > linear r^2 set equation to exponential regression
+	if(expCoeffDeter > linCoeffDeter):
+		regEqn = getExpRegEqn(xVals, yVals)
+	# Otherwise set equation to linear regression
+	else:
+		regEqn = getLinRegEqn(xVals, yVals)
+	return regEqn
+
 
